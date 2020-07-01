@@ -91,12 +91,6 @@ type APIClient struct {
 
 	PipelineTemplatesControllerApi *PipelineTemplatesControllerApiService
 
-	PluginInfoControllerApi *PluginInfoControllerApiService
-
-	PluginPublishControllerApi *PluginPublishControllerApiService
-
-	PluginsInstalledControllerApi *PluginsInstalledControllerApiService
-
 	ProjectControllerApi *ProjectControllerApiService
 
 	PubsubSubscriptionControllerApi *PubsubSubscriptionControllerApiService
@@ -167,9 +161,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.PipelineConfigControllerApi = (*PipelineConfigControllerApiService)(&c.common)
 	c.PipelineControllerApi = (*PipelineControllerApiService)(&c.common)
 	c.PipelineTemplatesControllerApi = (*PipelineTemplatesControllerApiService)(&c.common)
-	c.PluginInfoControllerApi = (*PluginInfoControllerApiService)(&c.common)
-	c.PluginPublishControllerApi = (*PluginPublishControllerApiService)(&c.common)
-	c.PluginsInstalledControllerApi = (*PluginsInstalledControllerApiService)(&c.common)
 	c.ProjectControllerApi = (*ProjectControllerApiService)(&c.common)
 	c.PubsubSubscriptionControllerApi = (*PubsubSubscriptionControllerApiService)(&c.common)
 	c.ReorderPipelinesControllerApi = (*ReorderPipelinesControllerApiService)(&c.common)
@@ -430,17 +421,17 @@ func (c *APIClient) prepareRequest(
 }
 
 func (c *APIClient) decode(v interface{}, b []byte, contentType string) (err error) {
-		if strings.Contains(contentType, "application/xml") {
-			if err = xml.Unmarshal(b, v); err != nil {
-				return err
-			}
-			return nil
-		} else if strings.Contains(contentType, "application/json") {
-			if err = json.Unmarshal(b, v); err != nil {
-				return err
-			}
-			return nil
+	if strings.Contains(contentType, "application/xml") {
+		if err = xml.Unmarshal(b, v); err != nil {
+			return err
 		}
+		return nil
+	} else if strings.Contains(contentType, "application/json") {
+		if err = json.Unmarshal(b, v); err != nil {
+			return err
+		}
+		return nil
+	}
 	return errors.New("undefined response type")
 }
 
